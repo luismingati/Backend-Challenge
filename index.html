@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LuisMingati's Amazon Scraper</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: lightgray;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: gray;
+    }
+    .search-container {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 300px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: blue;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: rgba(0, 0, 255, 0.549);
+    }
+    #results {
+      margin-top: 20px;
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .product {
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .product img {
+      max-width: 100px;
+      border-radius: 5px;
+    }
+    .product-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .product-info h2 {
+      margin: 0;
+      font-size: 18px;
+      color: #0073e6;
+    }
+    .product-info p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Luis Mingati's Amazon Product Scraper</h1>
+  <div class="search-container">
+    <input type="text" id="keyword" placeholder="Enter search keyword">
+    <button onclick="scrape()">Search</button>
+  </div>
+  <div id="results"></div>
+
+  <script>
+    async function scrape() {
+      const keyword = document.getElementById('keyword').value;
+      const response = await fetch(`http://localhost:3000/api/scrape?keyword=${keyword}`);
+      const products = await response.json();
+      
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+
+      products.forEach(product => {
+        const productDiv = document.createElement('div');
+        productDiv.classList.add('product');
+
+        productDiv.innerHTML = `
+          <img src="${product.imageUrl}" alt="${product.title}">
+          <div class="product-info">
+            <h2>${product.title}</h2>
+            <p>Rating: ${product.rating} stars</p>
+            <p>Number of Reviews: ${product.numberOfReviews}</p>
+          </div>
+        `;
+        resultsDiv.appendChild(productDiv);
+      });
+    }
+  </script>
+</body>
+</html>
